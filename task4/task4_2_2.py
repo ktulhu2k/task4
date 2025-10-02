@@ -14,12 +14,27 @@ def inst(parent=None, members=None, *args, **kwargs):
         match act:
             case "GET":  # чтение переменной
                 if name not in context["members"]:
-                    raise AttributeError(f"'{name}' не существуе")
+                    raise AttributeError(f"'{name}' не существует")
                 member = context["members"][name]
                 if member["access"] != "public": #только паблик
                     raise AttributeError(f"'{name}' ошибка доступа")
                 return member["value"]
 
+            case "SET":
+                if len(args) == 0:
+                    raise ValueError("Нет значения")
+                value = args[0]
+                if name not in context["members"]:
+                    raise AttributeError(f"'{name}' не существует")
+                member = context["members"][name]
+                if member["access"] == "readonly":
+                    raise AttributeError(f"'{name}' только чтение")
+                if member["access"] not in ("public", "protected", "private", "internal"):
+                    raise AttributeError(f"'{name}' нет атрибута")
+                # Обновляем значение
+                context["members"][name]["value"] = value
+                return value
+                
             case "CALL":  # вызов метода 
                 if name not in context["members"]:
                     raise AttributeError(f"Метод '{name}' не существуе")
