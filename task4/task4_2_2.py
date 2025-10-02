@@ -30,7 +30,7 @@ def inst(parent=None, members=None, *args, **kwargs):
                 if member["access"] == "readonly":
                     raise AttributeError(f"'{name}' только чтение")
                 if member["access"] not in ("public", "protected", "private", "internal"):
-                    raise AttributeError(f"'{name}' нет атрибута")
+                    raise AttributeError(f"'{name}' странный атрибут")
                 # Обновляем значение
                 context["members"][name]["value"] = value
                 return value
